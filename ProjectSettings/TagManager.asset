@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Floor
+  - Target
+  - Su
+  - honey
   layers:
   - Default
   - TransparentFX
