@@ -10,19 +10,29 @@ public class PlayerScript : MonoBehaviour
     private float speed;
     public float inputSpeed = 20.0f;
 
-    float jumpForce = 400f;
+    float jumpForce = 340f;
     public int jumpCount = 0;
 
     public bool OnGround;
     public bool Attack;
 
     private Animator animator;
+    public GameObject jump1;
+    public GameObject jump2;
+
+    public AudioClip jump;
+    public AudioClip jum;
+    AudioSource audioSource;
 
     void Start()
     {
+        
         rb2d = GetComponent<Rigidbody2D>();
         animator = this.gameObject.GetComponent<Animator>();
         OnGround = false;
+
+        audioSource = GetComponent<AudioSource>();
+
     }
     void Update()
     {
@@ -32,13 +42,28 @@ public class PlayerScript : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow) && this.jumpCount < 2)
             {
-                this.rb2d.AddForce(transform.up * jumpForce);
+                audioSource.PlayOneShot(jump);
                 jumpCount++;
+                if (jumpCount == 1)
+                {
+                    GameObject effect = Instantiate(jump2, this.gameObject.transform.position - new Vector3 (0,0.5f,0), Quaternion.identity); // エフェクトを生成
+                    Destroy(effect, 1.2f);
+                    this.rb2d.AddForce(Vector2.up * jumpForce);
+                }
+
+                if(jumpCount == 0)
+                {
+                    //GameObject effect = Instantiate(jump1, this.gameObject.transform.position - new Vector3(0, 1, 0), Quaternion.identity); // エフェクトを生成
+                    //Destroy(effect, 1f);
+                    this.rb2d.AddForce(Vector2.up * jumpForce);
+                }
             }
+
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 this.rb2d.AddForce(transform.up * -1f);
             }
+
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -55,11 +80,11 @@ public class PlayerScript : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            this.gameObject.transform.localScale = new Vector3(2, 2, 1);
+            this.gameObject.transform.localScale = new Vector3(1, 1, 1);
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            this.gameObject.transform.localScale = new Vector3(-2, 2, 1);
+            this.gameObject.transform.localScale = new Vector3(-1,1, 1);
         }
     }
     void FixedUpdate()
@@ -70,7 +95,7 @@ public class PlayerScript : MonoBehaviour
         }
         else if (x_val > 0)
         {
-            if (Attack == true || jumpCount == 2)
+            if (jumpCount == 2)
             {
                 speed = inputSpeed * 0.3f;
             }
@@ -81,7 +106,7 @@ public class PlayerScript : MonoBehaviour
         }
         else if (x_val < 0)
         {
-            if (Attack == true || jumpCount == 2)
+            if (jumpCount == 2)
             {
                 speed = inputSpeed * -0.3f;
             }
@@ -92,31 +117,23 @@ public class PlayerScript : MonoBehaviour
         }
         // キャラクターを移動 Vextor2(x軸スピード、y軸スピード(元のまま))
         rb2d.velocity = new Vector2(speed, rb2d.velocity.y);
-
-        
     }
 
-
-
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if(other.gameObject.CompareTag("Floor"))
+        if(collision.gameObject.CompareTag("Floor"))
         {
             jumpCount = 0;
             OnGround = true;
             animator.SetFloat("jump", 0f);
         }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if(collision.gameObject.CompareTag("Floor"))
+        else
         {
-            OnGround = false;
-            animator.SetFloat("jump", 1.0f);
+            jumpCount = 0;
+            OnGround = true;
+            animator.SetFloat("jump", 1f);
         }
     }
-
 
     void aEnd()
     {
