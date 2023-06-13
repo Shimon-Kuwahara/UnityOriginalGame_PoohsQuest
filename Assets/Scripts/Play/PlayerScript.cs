@@ -26,7 +26,7 @@ public class PlayerScript : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(GetComponent<Renderer>().material.color);
+    //    Debug.Log(GetComponent<Renderer>().material.color);
         rb2d = GetComponent<Rigidbody2D>();
         animator = this.gameObject.GetComponent<Animator>();
         OnGround = false;
