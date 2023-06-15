@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(honeynum);
+
         Text time_text = time_object.GetComponent<Text>();
         Text target_text = target_tet.GetComponent<Text>();
 

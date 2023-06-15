@@ -232,7 +232,7 @@ MonoBehaviour:
   numy: 1
   speedx: 3
   speedy: 0
-  x: 6
+  x: 3
   y: 0
 --- !u!1 &85885772
 GameObject:
